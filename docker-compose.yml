@@ -1,0 +1,21 @@
+services:
+  oracle-xe:
+    image: gvenzl/oracle-xe:21-slim
+    platform: linux/amd64
+    container_name: oracle-bd-proyecto
+    ports:
+      - "${ORACLE_PORT:-1521}:1521"
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD}
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./scripts/init:/container-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+volumes:
+  oracle-data:
